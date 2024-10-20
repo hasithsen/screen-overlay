@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import colorchooser
 
 # Function to move the window when dragged
 def on_drag(event):
@@ -21,13 +22,19 @@ def do_resize(event):
 
 # Change button colors to match the background when mouse leaves
 def hide_buttons(event):
-    close_button.config(bg="lightblue", fg="lightblue", activebackground="lightblue")
-    resize_handle.config(bg="lightblue")
+    close_button.config(bg=frame.cget("bg"), fg=frame.cget("bg"), activebackground=frame.cget("bg"))
+    resize_handle.config(bg=frame.cget("bg"))
 
 # Restore the original button colors when mouse enters
 def show_buttons(event):
     close_button.config(bg="red", fg="white", activebackground="darkred")
     resize_handle.config(bg="blue")
+
+# Function to open a color picker and change window background
+def pick_color():
+    color = colorchooser.askcolor()[1]  # Get the hex code of the selected color
+    if color:
+        frame.config(bg=color)  # Change the background of the window to the selected color
 
 # Create the main window
 root = tk.Tk()
@@ -52,6 +59,10 @@ close_button = tk.Button(frame, text="X", command=root.quit, bg="red", fg="white
 resize_handle = tk.Frame(root, bg="blue", cursor="bottom_right_corner", width=10, height=10)
 resize_handle.bind("<Button-1>", start_resize)
 resize_handle.bind("<B1-Motion>", do_resize)
+
+# Add a color picker button in the top-left corner
+color_picker_button = tk.Button(frame, text="🎨", command=pick_color, bg="white", fg="black", borderwidth=0)
+color_picker_button.place(relx=0.0, rely=0.0, anchor="nw")
 
 # Bind mouse enter and leave events to change button colors
 frame.bind("<Enter>", show_buttons)
