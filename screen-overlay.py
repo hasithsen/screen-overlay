@@ -24,11 +24,13 @@ def do_resize(event):
 def hide_buttons(event):
     close_button.config(bg=frame.cget("bg"), fg=frame.cget("bg"), activebackground=frame.cget("bg"))
     resize_handle.config(bg=frame.cget("bg"))
+    color_picker_button.config(bg=frame.cget("bg"))
 
 # Restore the original button colors when mouse enters
 def show_buttons(event):
     close_button.config(bg="red", fg="white", activebackground="darkred")
     resize_handle.config(bg="blue")
+    color_picker_button.config(bg=frame.cget("bg"), fg="black", activebackground="lightgray")
 
 # Function to open a color picker and change window background
 def pick_color():
@@ -37,6 +39,7 @@ def pick_color():
     root.deiconify()
     if color:
         frame.config(bg=color)  # Change the background of the window to the selected color
+        color_picker_button.config(bg=color)  # Change the color picker button to match the window
 
 # Create the main window
 root = tk.Tk()
@@ -55,7 +58,7 @@ frame.pack(fill="both", expand=True)
 frame.bind("<B1-Motion>", on_drag)
 
 # Create a close button that blends with the window when hidden
-close_button = tk.Button(frame, text="X", command=root.quit, bg="red", fg="white", borderwidth=0)
+close_button = tk.Button(frame, text="X", command=root.quit, bg="red", fg="white", borderwidth=0, highlightthickness=0)
 
 # Create a resize handle in the bottom-right corner
 resize_handle = tk.Frame(root, bg="blue", cursor="bottom_right_corner", width=10, height=10)
@@ -63,7 +66,7 @@ resize_handle.bind("<Button-1>", start_resize)
 resize_handle.bind("<B1-Motion>", do_resize)
 
 # Add a color picker button in the top-left corner
-color_picker_button = tk.Button(frame, text="🎨", command=pick_color, bg="white", fg="black", borderwidth=0)
+color_picker_button = tk.Button(frame, text="🎨", command=pick_color, bg="lightblue", fg="black", borderwidth=0, highlightthickness=0)
 color_picker_button.place(relx=0.0, rely=0.0, anchor="nw")
 
 # Bind mouse enter and leave events to change button colors
