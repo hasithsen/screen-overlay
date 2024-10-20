@@ -1,5 +1,65 @@
-import tkinter
+import tkinter as tk
 
-top = tkinter.Tk()
+# Function to move the window when dragged
+def on_drag(event):
+    root.geometry(f'+{event.x_root}+{event.y_root}')
 
-top.mainloop()
+# Function to resize the window when dragged at the edges
+def start_resize(event):
+    global x, y, width, height
+    x = event.x
+    y = event.y
+    width = root.winfo_width()
+    height = root.winfo_height()
+
+def do_resize(event):
+    dx = event.x - x
+    dy = event.y - y
+    new_width = max(root.minsize()[0], width + dx)
+    new_height = max(root.minsize()[1], height + dy)
+    root.geometry(f'{new_width}x{new_height}')
+
+# Change button colors to match the background when mouse leaves
+def hide_buttons(event):
+    close_button.config(bg="lightblue", fg="lightblue", activebackground="lightblue")
+    resize_handle.config(bg="lightblue")
+
+# Restore the original button colors when mouse enters
+def show_buttons(event):
+    close_button.config(bg="red", fg="white", activebackground="darkred")
+    resize_handle.config(bg="blue")
+
+# Create the main window
+root = tk.Tk()
+
+# Remove window decorations (title bar, border, etc.)
+root.overrideredirect(True)
+
+# Set minimum size for resizing
+root.minsize(200, 100)
+
+# Create a frame for the window's content area
+frame = tk.Frame(root, bg="lightblue")
+frame.pack(fill="both", expand=True)
+
+# Bind dragging to the frame
+frame.bind("<B1-Motion>", on_drag)
+
+# Create a close button that blends with the window when hidden
+close_button = tk.Button(frame, text="X", command=root.quit, bg="red", fg="white", borderwidth=0)
+
+# Create a resize handle in the bottom-right corner
+resize_handle = tk.Frame(root, bg="blue", cursor="bottom_right_corner", width=10, height=10)
+resize_handle.bind("<Button-1>", start_resize)
+resize_handle.bind("<B1-Motion>", do_resize)
+
+# Bind mouse enter and leave events to change button colors
+frame.bind("<Enter>", show_buttons)
+frame.bind("<Leave>", hide_buttons)
+
+# Place buttons initially (you can start with hidden colors if preferred)
+close_button.place(relx=1.0, rely=0.0, anchor="ne")
+resize_handle.place(relx=1.0, rely=1.0, anchor="se")
+
+# Run the main loop
+root.mainloop()
