@@ -34,7 +34,9 @@ def show_buttons(event):
 
 # Function to open a color picker and change window background
 def pick_color():
+    root.withdraw()
     color = colorchooser.askcolor()[1]  # Get the hex code of the selected color
+    root.deiconify()
     if color:
         frame.config(bg=color)  # Change the background of the window to the selected color
         color_picker_button.config(bg=color)  # Change the color picker button to match the window
